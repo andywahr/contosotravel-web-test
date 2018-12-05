@@ -78,6 +78,9 @@
     <Compile Include="My Project\AssemblyInfo.vb" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="loadData.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="SingleFullPositiveUser.webtest" />
   </ItemGroup>
   <Choose>
