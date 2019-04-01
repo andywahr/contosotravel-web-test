@@ -1,5 +1,5 @@
 config:
-  target: "https://contosotravel-neappsbm-web.azurewebsites.net/"
+  target: "http://localhost:1500"
   phases:
     - duration: 10
       arrivalRate: 1
@@ -33,7 +33,7 @@ scenarios:
       - log: "__RequestVerificationToken1 [{{ __RequestVerificationToken1 }}]"
       - post:
           url: "/Flights/Search"
-          json:
+          form:
             StartLocation: "{{ DepartFrom }}"
             EndLocation: "{{ ArriveAt }}"
             StartDate: "{{ DepartOn }}"
@@ -53,7 +53,7 @@ scenarios:
       - log: "SelectedDepartingFlight [{{ SelectedDepartingFlight }}] SelectedReturningFlight [{{ SelectedReturningFlight }}]"
       - post:
           url: "/Flights/Purchase"
-          json:
+          form:
             SelectedDepartingFlight: "{{ SelectedDepartingFlight }}"
             SelectedReturningFlight: "{{ SelectedReturningFlight }}"
             __RequestVerificationToken: "{{ __RequestVerificationToken2 }}"
@@ -65,7 +65,7 @@ scenarios:
               as: "__RequestVerificationToken3"                        
       - post:
           url: "/Hotels/Search"
-          json:
+          form:
             StartLocation: "{{ ArriveAt }}"
             StartDate: "{{ DepartOn }}"
             EndDate: "{{ ReturnOn }}"
@@ -84,7 +84,7 @@ scenarios:
       - log: "SelectedHotel [{{ SelectedHotel }}] NumberOfDays [{{ HotelNumberOfDays }}]"
       - post:
           url: "/Hotels/Purchase"
-          json:
+          form:
             SelectedHotel: "{{ SelectedHotel }}"
             NumberOfDays: "{{ HotelNumberOfDays }}"
             __RequestVerificationToken: "{{ __RequestVerificationToken4 }}"            
@@ -96,7 +96,7 @@ scenarios:
               as: "__RequestVerificationToken5"                        
       - post:
           url: "/Cars/Search"
-          json:
+          form:
             StartLocation: "{{ ArriveAt }}"
             StartDate: "{{ DepartOn }}"
             EndDate: "{{ ReturnOn }}"
@@ -115,7 +115,7 @@ scenarios:
       - log: "SelectedCar [{{ SelectedCar }}] NumberOfDays [{{ CarNumberOfDays }}]"
       - post:
           url: "/Cars/Purchase"
-          json:
+          form:
             PurchasedOn: "{{ SelectedCar }}"
             NumberOfDays: "{{ CarNumberOfDays }}"
             __RequestVerificationToken: "{{ __RequestVerificationToken6 }}"
@@ -127,6 +127,6 @@ scenarios:
               as: "__RequestVerificationToken"
       - post:
           url: "/Cart/Purchase"
-          json:
+          form:
             PurchasedOn: "{{ PurchasedOn }}"
             __RequestVerificationToken: "{{ __RequestVerificationToken7 }}"                   
