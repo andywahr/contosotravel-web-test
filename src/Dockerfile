@@ -1,10 +1,9 @@
-FROM node:8-alpine
-ARG URL
+FROM node:10-alpine
 
 VOLUME /artillery
 WORKDIR /artillery
 
-RUN npm install -g artillery
+RUN npm install -g artillery@1.6.0-14
 COPY ContosoTravel.Web.Artillery.yaml .
 
 ENTRYPOINT ["artillery"]
