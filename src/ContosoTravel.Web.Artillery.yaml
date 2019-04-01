@@ -1,0 +1,132 @@
+config:
+  target: "https://contosotravel-neappsbm-web.azurewebsites.net/"
+  phases:
+    - duration: 10
+      arrivalRate: 1
+scenarios:
+  - flow:
+      - get:
+          url: "/test"
+          capture:
+            - selector: "input[id^=DepartFrom]"
+              attr: "value"
+              as: "DepartFrom"
+            - selector: "input[id^=DepartOn]"
+              attr: "value"
+              as: "DepartOn"
+            - selector: "input[id^=ArriveAt]"
+              attr: "value"
+              as: "ArriveAt"
+            - selector: "input[id^=ReturnOn]"
+              attr: "value"
+              as: "ReturnOn"                        
+            - selector: "input[id^=PurchasedOn]"
+              attr: "value"
+              as: "PurchasedOn" 
+      - log: "DepartFrom [{{ DepartFrom }}] DepartOn [{{ DepartOn }}] ArriveAt [{{ ArriveAt }}] ReturnOn [{{ ReturnOn }}] PurchasedOn [{{ PurchasedOn }}] "      
+      - get:
+          url: "/"
+          capture:          
+            - selector: "input[id^=__RequestVerificationToken]"
+              attr: "value"
+              as: "__RequestVerificationToken1"                        
+      - log: "__RequestVerificationToken1 [{{ __RequestVerificationToken1 }}]"
+      - post:
+          url: "/Flights/Search"
+          json:
+            StartLocation: "{{ DepartFrom }}"
+            EndLocation: "{{ ArriveAt }}"
+            StartDate: "{{ DepartOn }}"
+            EndDate: "{{ ReturnOn }}"
+            __RequestVerificationToken: "{{ __RequestVerificationToken1 }}"
+            IsTest: "True"
+          capture:          
+            - selector: "input[id^=SelectedDepartingFlight][checked^=checked]"
+              attr: "value"
+              as: "SelectedDepartingFlight"
+            - selector: "input[id^=__RequestVerificationToken]"
+              attr: "value"
+              as: "__RequestVerificationToken2"
+            - selector: "input[id^=SelectedReturningFlight][checked^=checked]"
+              attr: "value"
+              as: "SelectedReturningFlight"
+      - log: "SelectedDepartingFlight [{{ SelectedDepartingFlight }}] SelectedReturningFlight [{{ SelectedReturningFlight }}]"
+      - post:
+          url: "/Flights/Purchase"
+          json:
+            SelectedDepartingFlight: "{{ SelectedDepartingFlight }}"
+            SelectedReturningFlight: "{{ SelectedReturningFlight }}"
+            __RequestVerificationToken: "{{ __RequestVerificationToken2 }}"
+      - get:
+          url: "/Hotels"
+          capture:          
+            - selector: "input[id^=__RequestVerificationToken]"
+              attr: "value"
+              as: "__RequestVerificationToken3"                        
+      - post:
+          url: "/Hotels/Search"
+          json:
+            StartLocation: "{{ ArriveAt }}"
+            StartDate: "{{ DepartOn }}"
+            EndDate: "{{ ReturnOn }}"
+            __RequestVerificationToken: "{{ __RequestVerificationToken3 }}"
+            IsTest: "True"
+          capture:          
+            - selector: "input[id^=SelectedHotel][checked^=checked]"
+              attr: "value"
+              as: "SelectedHotel"
+            - selector: "input[id^=__RequestVerificationToken]"
+              attr: "value"
+              as: "__RequestVerificationToken4"
+            - selector: "input[name^=NumberOfDays]"
+              attr: "value"
+              as: "HotelNumberOfDays"
+      - log: "SelectedHotel [{{ SelectedHotel }}] NumberOfDays [{{ HotelNumberOfDays }}]"
+      - post:
+          url: "/Hotels/Purchase"
+          json:
+            SelectedHotel: "{{ SelectedHotel }}"
+            NumberOfDays: "{{ HotelNumberOfDays }}"
+            __RequestVerificationToken: "{{ __RequestVerificationToken4 }}"            
+      - get:
+          url: "/Cars"
+          capture:          
+            - selector: "input[id^=__RequestVerificationToken]"
+              attr: "value"
+              as: "__RequestVerificationToken5"                        
+      - post:
+          url: "/Cars/Search"
+          json:
+            StartLocation: "{{ ArriveAt }}"
+            StartDate: "{{ DepartOn }}"
+            EndDate: "{{ ReturnOn }}"
+            __RequestVerificationToken: "{{ __RequestVerificationToken5 }}"
+            IsTest: "True"
+          capture:          
+            - selector: "input[id^=SelectedCar][checked^=checked]"
+              attr: "value"
+              as: "SelectedCar"
+            - selector: "input[id^=__RequestVerificationToken]"
+              attr: "value"
+              as: "__RequestVerificationToken6"
+            - selector: "input[name^=NumberOfDays]"
+              attr: "value"
+              as: "CarNumberOfDays"
+      - log: "SelectedCar [{{ SelectedCar }}] NumberOfDays [{{ CarNumberOfDays }}]"
+      - post:
+          url: "/Cars/Purchase"
+          json:
+            PurchasedOn: "{{ SelectedCar }}"
+            NumberOfDays: "{{ CarNumberOfDays }}"
+            __RequestVerificationToken: "{{ __RequestVerificationToken6 }}"
+      - get:
+          url: "/Cart"
+          capture:          
+            - selector: "input[id^=__RequestVerificationToken7]"
+              attr: "value"
+              as: "__RequestVerificationToken"
+      - post:
+          url: "/Cart/Purchase"
+          json:
+            PurchasedOn: "{{ PurchasedOn }}"
+            __RequestVerificationToken: "{{ __RequestVerificationToken7 }}"                   
