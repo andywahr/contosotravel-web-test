@@ -1,5 +1,4 @@
 config:
-  target: https://contosotravel-nodetest-web.azurewebsites.net/
   http:
     pool: 10 
   phases:
