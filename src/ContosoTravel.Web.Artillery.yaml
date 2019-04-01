@@ -1,8 +1,16 @@
 config:
-  target: "http://localhost:1500"
+  target: https://contosotravel-nodetest-web.azurewebsites.net/
+  http:
+    pool: 10 
   phases:
-    - duration: 10
-      arrivalRate: 1
+    - duration: 30
+      arrivalRate: 0
+      rampTo: 10
+      name: "Warm up"  
+    - duration: 300
+      arrivalRate: 10
+      rampTo: 10
+      name: "Sustained Load"        
 scenarios:
   - flow:
       - get:
