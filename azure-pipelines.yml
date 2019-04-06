@@ -13,6 +13,6 @@ variables:
   imageName: 'contosotravel-loadtest:$(build.buildId)'
 
 steps:
-- script: docker build -f src/Dockerfile -t $(imageName) .
+- script: docker build -f ./Dockerfile -t $(imageName) .
   displayName: 'docker build'
   workingDirectory: src
