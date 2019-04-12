@@ -1,11 +1,11 @@
 FROM node:10-alpine
-ARG URL
 
 VOLUME /artillery
 WORKDIR /artillery
 
-RUN npm install -g artillery
+RUN npm install -g artillery@1.6.0-14
+RUN ls -al /usr
 COPY ContosoTravel.Web.Artillery.yaml .
 
-ENTRYPOINT ["artillery"]
-CMD ["run /artillery/ContosoTravel.Web.Artillery.yaml -t http://${URL}"]
+CMD ["sh", "-c", "echo URL http://${URL};artillery run -t http://${URL} /artillery/ContosoTravel.Web.Artillery.yaml"]
+

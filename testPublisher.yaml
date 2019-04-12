@@ -1,0 +1,25 @@
+# a build with no CI
+trigger: none
+
+jobs:
+- job: Publish_ArtilleryTests
+  pool:
+    name: Hosted Ubuntu 1604    
+  steps:
+  - task: Docker@0
+    displayName: 'Build dataloader Container'
+    inputs:
+      dockerFile: src/Dockerfile
+      imageName: 'andywahr/contosotravel-loadtest:latest'
+      qualifyImageName: false
+      workingDirectory: src
+
+  - task: Docker@0
+    displayName: 'Push dataloader to DockerHub'
+    inputs:
+      containerregistrytype: 'Container Registry'
+      dockerRegistryConnection: DockerHub
+      action: 'Push an image'
+      imageName: 'andywahr/contosotravel-loadtest:latest'
+      qualifyImageName: false
+
