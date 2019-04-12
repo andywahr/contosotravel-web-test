@@ -8,4 +8,4 @@ RUN npm install -g artillery
 COPY ContosoTravel.Web.Artillery.yaml .
 
 ENTRYPOINT ["artillery"]
-CMD ["run /artillery/ContosoTravel.Web.Artillery.yaml -t ${URL}"]
+CMD ["run /artillery/ContosoTravel.Web.Artillery.yaml -t http://${URL}"]
